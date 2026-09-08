@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlphaTrade · Authentication</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .auth-container {
+      display: flex;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0b0e14 0%, #1a1f2e 100%);
+    }
+
+    .auth-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(35, 197, 94, 0.1) 0%, rgba(75, 106, 142, 0.1) 100%);
+    }
+
+    .auth-brand {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .auth-brand i {
+      font-size: 3.5rem;
+      color: #23c55e;
+      margin-bottom: 20px;
+    }
+
+    .auth-brand h1 {
+      font-size: 2.5rem;
+      color: #eef2f6;
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .auth-brand p {
+      color: #8a9bb0;
+      margin-top: 10px;
+      font-size: 1.1rem;
+    }
+
+    .auth-features {
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      max-width: 350px;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .feature-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(35, 197, 94, 0.15);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #23c55e;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .feature-text h3 {
+      color: #eef2f6;
+      font-size: 0.95rem;
+      margin: 0 0 5px 0;
+    }
+
+    .feature-text p {
+      color: #6a7e98;
+      font-size: 0.85rem;
+      margin: 0;
+    }
+
+    .auth-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: #141a24;
+      border-radius: 24px;
+      padding: 40px 32px;
+      border: 1px solid #26303e;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+    }
+
+    .auth-card h2 {
+      color: #eef2f6;
+      font-size: 1.8rem;
+      margin: 0 0 10px 0;
+      font-weight: 700;
+    }
+
+    .auth-card p {
+      color: #6a7e98;
+      font-size: 0.95rem;
+      margin: 0 0 30px 0;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #6a7e98;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: #1a2330;
+      border: 1px solid #2f3b4b;
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #eef2f6;
+      font-size: 1rem;
+      font-weight: 400;
+      outline: none;
+      transition: 0.15s;
+    }
+
+    .form-input:focus {
+      border-color: #4b6a8e;
+      background: #1f2a3a;
+      box-shadow: 0 0 0 3px rgba(75, 106, 142, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: #4a5b72;
+    }
+
+    .form-input.error {
+      border-color: #f2585e;
+      background: rgba(242, 88, 94, 0.05);
+    }
+
+    .form-error {
+      color: #f2585e;
+      font-size: 0.8rem;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .form-error.show {
+      display: block;
+    }
+
+    .auth-btn {
+      width: 100%;
+      background: #23c55e;
+      color: #0b1119;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      letter-spacing: 0.5px;
+      margin-top: 10px;
+    }
+
+    .auth-btn:hover {
+      background: #2ddb6e;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(35, 197, 94, 0.3);
+    }
+
+    .auth-btn:active {
+      transform: translateY(0);
+    }
+
+    .auth-btn.loading {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      gap: 12px;
+      color: #4a5b72;
+      font-size: 0.85rem;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #2f3b4b;
+    }
+
+    .toggle-link {
+      text-align: center;
+      color: #6a7e98;
+      font-size: 0.9rem;
+      margin-top: 20px;
+    }
+
+    .toggle-link a {
+      color: #23c55e;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .toggle-link a:hover {
+      color: #2ddb6e;
+    }
+
+    .password-toggle {
+      position: relative;
+    }
+
+    .password-toggle i {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6a7e98;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: 0.2s;
+    }
+
+    .password-toggle i:hover {
+      color: #8a9bb0;
+    }
+
+    .auth-message {
+      background: #1e2a38;
+      border-left: 4px solid #23c55e;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .auth-message.show {
+      display: flex;
+    }
+
+    .auth-message.error {
+      border-left-color: #f2585e;
+      background: rgba(242, 88, 94, 0.1);
+      color: #f2585e;
+    }
+
+    .auth-message.success {
+      border-left-color: #23c55e;
+      color: #23c55e;
+    }
+
+    .auth-message i {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      .auth-container {
+        flex-direction: column;
+      }
+
+      .auth-left {
+        padding: 30px 20px;
+      }
+
+      .auth-brand h1 {
+        font-size: 2rem;
+      }
+
+      .auth-features {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .auth-card {
+        padding: 30px 20px;
+      }
+
+      .auth-card h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="auth-container">
+  <!-- Left Panel -->
+  <div class="auth-left">
+    <div class="auth-brand">
+      <i class="fas fa-chart-line"></i>
+      <h1>AlphaTrade</h1>
+      <p>Real-time Trading Simulator</p>
+    </div>
+
+    <div class="auth-features">
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div class="feature-text">
+          <h3>Real-time Charts</h3>
+          <p>Live price updates and candlestick analysis</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="feature-text">
+          <h3>Advanced Orders</h3>
+          <p>Stop-loss, take-profit, and limit orders</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-chart-pie"></i>
+        </div>
+        <div class="feature-text">
+          <h3>Portfolio Tracking</h3>
+          <p>Complete holdings and performance history</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-brain"></i>
+        </div>
+        <div class="feature-text">
+          <h3>AI Analytics</h3>
+          <p>Smart insights and trading recommendations</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="auth-right">
+    <!-- Login Form -->
+    <div class="auth-card" id="loginForm">
+      <h2>Welcome Back</h2>
+      <p>Sign in to your AlphaTrade account</p>
+
+      <div class="auth-message" id="loginMessage"></div>
+
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="you@example.com" required>
+          <div class="form-error" id="loginEmailError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <div class="password-toggle">
+            <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" required>
+            <i class="fas fa-eye" onclick="togglePasswordVisibility('loginPassword', this)"></i>
+          </div>
+          <div class="form-error" id="loginPasswordError"></div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 0.85rem;">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #6a7e98;">
+            <input type="checkbox" id="rememberMe" style="cursor: pointer;">
+            Remember me
+          </label>
+          <a href="#" style="color: #23c55e; text-decoration: none;">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="auth-btn">Sign In</button>
+      </form>
+
+      <div class="toggle-link">
+        Don't have an account? <a onclick="toggleForms()">Create one</a>
+      </div>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="auth-card" id="signupForm" style="display: none;">
+      <h2>Create Account</h2>
+      <p>Join AlphaTrade and start trading today</p>
+
+      <div class="auth-message" id="signupMessage"></div>
+
+      <form onsubmit="handleSignup(event)">
+        <div class="form-group">
+          <label for="signupName">Full Name</label>
+          <input type="text" id="signupName" class="form-input" placeholder="John Doe" required>
+          <div class="form-error" id="signupNameError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="signupEmail">Email Address</label>
+          <input type="email" id="signupEmail" class="form-input" placeholder="you@example.com" required>
+          <div class="form-error" id="signupEmailError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <div class="password-toggle">
+            <input type="password" id="signupPassword" class="form-input" placeholder="Min. 8 characters" required>
+            <i class="fas fa-eye" onclick="togglePasswordVisibility('signupPassword', this)"></i>
+          </div>
+          <div class="form-error" id="signupPasswordError"></div>
+          <div style="color: #6a7e98; font-size: 0.75rem; margin-top: 6px;">
+            Password must contain: uppercase, lowercase, number, and special character
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="signupConfirmPassword">Confirm Password</label>
+          <div class="password-toggle">
+            <input type="password" id="signupConfirmPassword" class="form-input" placeholder="Confirm password" required>
+            <i class="fas fa-eye" onclick="togglePasswordVisibility('signupConfirmPassword', this)"></i>
+          </div>
+          <div class="form-error" id="signupConfirmPasswordError"></div>
+        </div>
+
+        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; color: #6a7e98; font-size: 0.85rem; margin-bottom: 20px;">
+          <input type="checkbox" id="agreeTerms" required style="cursor: pointer; margin-top: 3px;">
+          <span>I agree to the <a href="#" style="color: #23c55e; text-decoration: none;">Terms of Service</a> and <a href="#" style="color: #23c55e; text-decoration: none;">Privacy Policy</a></span>
+        </label>
+
+        <button type="submit" class="auth-btn">Create Account</button>
+      </form>
+
+      <div class="toggle-link">
+        Already have an account? <a onclick="toggleForms()">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  function toggleForms() {
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+    signupForm.style.display = signupForm.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function togglePasswordVisibility(fieldId, icon) {
+    const field = document.getElementById(fieldId);
+    if (field.type === 'password') {
+      field.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      field.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  }
+
+  function showMessage(elementId, message, type) {
+    const messageEl = document.getElementById(elementId);
+    messageEl.textContent = message;
+    messageEl.className = `auth-message show ${type}`;
+    setTimeout(() => {
+      messageEl.classList.remove('show');
+    }, 4000);
+  }
+
+  function clearErrors() {
+    document.querySelectorAll('.form-error').forEach(el => {
+      el.classList.remove('show');
+      el.textContent = '';
+    });
+    document.querySelectorAll('.form-input').forEach(el => {
+      el.classList.remove('error');
+    });
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    clearErrors();
+
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+
+    // Validation
+    if (!email || !password) {
+      showMessage('loginMessage', 'Please fill in all fields', 'error');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      document.getElementById('loginEmailError').textContent = 'Invalid email format';
+      document.getElementById('loginEmailError').classList.add('show');
+      document.getElementById('loginEmail').classList.add('error');
+      return;
+    }
+
+    // Get stored accounts
+    const accounts = JSON.parse(localStorage.getItem('alphatrade_accounts') || '[]');
+    const account = accounts.find(acc => acc.email === email && acc.password === password);
+
+    if (!account) {
+      showMessage('loginMessage', '❌ Invalid email or password', 'error');
+      return;
+    }
+
+    // Success
+    const session = {
+      userId: account.id,
+      email: account.email,
+      name: account.name,
+      loginTime: new Date().toISOString()
+    };
+
+    localStorage.setItem('alphatrade_session', JSON.stringify(session));
+    if (rememberMe) {
+      localStorage.setItem('alphatrade_remember', email);
+    }
+
+    showMessage('loginMessage', '✅ Login successful! Redirecting...', 'success');
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 1500);
+  }
+
+  function handleSignup(e) {
+    e.preventDefault();
+    clearErrors();
+
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
+    const agreeTerms = document.getElementById('agreeTerms').checked;
+
+    // Validation
+    if (!name || !email || !password || !confirmPassword) {
+      showMessage('signupMessage', 'Please fill in all fields', 'error');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      document.getElementById('signupEmailError').textContent = 'Invalid email format';
+      document.getElementById('signupEmailError').classList.add('show');
+      document.getElementById('signupEmail').classList.add('error');
+      return;
+    }
+
+    if (password.length < 8) {
+      document.getElementById('signupPasswordError').textContent = 'Password must be at least 8 characters';
+      document.getElementById('signupPasswordError').classList.add('show');
+      document.getElementById('signupPassword').classList.add('error');
+      return;
+    }
+
+    // Password strength validation
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[!@#$%^&*]/.test(password);
+
+    if (!hasUpper || !hasLower || !hasNumber || !hasSpecial) {
+      document.getElementById('signupPasswordError').textContent = 'Password must include uppercase, lowercase, number, and special character';
+      document.getElementById('signupPasswordError').classList.add('show');
+      document.getElementById('signupPassword').classList.add('error');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      document.getElementById('signupConfirmPasswordError').textContent = 'Passwords do not match';
+      document.getElementById('signupConfirmPasswordError').classList.add('show');
+      document.getElementById('signupConfirmPassword').classList.add('error');
+      return;
+    }
+
+    if (!agreeTerms) {
+      showMessage('signupMessage', 'Please agree to the Terms of Service', 'error');
+      return;
+    }
+
+    // Check if email already exists
+    const accounts = JSON.parse(localStorage.getItem('alphatrade_accounts') || '[]');
+    if (accounts.some(acc => acc.email === email)) {
+      document.getElementById('signupEmailError').textContent = 'Email already registered';
+      document.getElementById('signupEmailError').classList.add('show');
+      document.getElementById('signupEmail').classList.add('error');
+      return;
+    }
+
+    // Create new account
+    const newAccount = {
+      id: 'user_' + Date.now(),
+      name: name,
+      email: email,
+      password: password,
+      createdAt: new Date().toISOString(),
+      portfolio: {
+        balanceBTC: 1.0,
+        balanceUSD: 50000,
+        trades: []
+      }
+    };
+
+    accounts.push(newAccount);
+    localStorage.setItem('alphatrade_accounts', JSON.stringify(accounts));
+
+    // Auto login
+    const session = {
+      userId: newAccount.id,
+      email: newAccount.email,
+      name: newAccount.name,
+      loginTime: new Date().toISOString()
+    };
+
+    localStorage.setItem('alphatrade_session', JSON.stringify(session));
+
+    showMessage('signupMessage', '✅ Account created successfully! Redirecting...', 'success');
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 1500);
+  }
+
+  // Check if already logged in
+  window.addEventListener('load', () => {
+    const session = localStorage.getItem('alphatrade_session');
+    if (session) {
+      window.location.href = 'dashboard.html';
+    }
+
+    // Pre-fill remember me
+    const remembered = localStorage.getItem('alphatrade_remember');
+    if (remembered) {
+      document.getElementById('loginEmail').value = remembered;
+      document.getElementById('rememberMe').checked = true;
+    }
+  });
+</script>
+</body>
+</html>
